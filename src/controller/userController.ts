@@ -1,22 +1,54 @@
+import { ObjectId } from "mongodb";
 import { User } from "../models/user";
 
-export const add_user = async (address: string) => {
-  const user = await User.findOne({ account: address });
+export const add_user = async (
+  first: string,
+  last: string,
+  email: string,
+  img: string
+) => {
+  const user = await User.findOne({ email: email });
   if (!user) {
     const newUser = new User({
-      account: address,
-      flag: false,
+      first: first,
+      last: last,
+      email: email,
+      invite: [],
+      img: img,
     });
     await newUser.save();
+    const savedUser = await User.findOne({ email: email });
+    return savedUser;
+  } else {
+    return 0;
   }
 };
 
-export const get_all_user = async () => {
-  const users = await User.find();
-  return users;
+export const get_user = async (id: string) => {
+  const user = await User.findOne({ _id: new ObjectId(id) });
+  return user;
 };
 
-export const get_whitelist = async () => {
-  const users = await User.find({ flag: true });
-  return users;
+export const invite_user = async (
+  first: string,
+  last: string,
+  email: string,
+  img: string,
+  inviteId: string
+) => {
+  const result = await add_user(first, last, email, img);
+  const inviteUser = await get_user(inviteId);
+  inviteUser?.invite.push(inviteId);
+  if (result) {
+    await User.findOneAndUpdate(
+      { _id: new ObjectId(inviteId) },
+      {
+        invite: inviteUser?.invite,
+      },
+      { new: true }
+    );
+    return result;
+  } else {
+    return 0;
+  }
 };

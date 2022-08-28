@@ -1,12 +1,24 @@
 import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema({
-  account: {
+  first: {
     type: String,
     required: true,
   },
-  flag: {
-    type: Boolean,
+  last: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  invite: {
+    type: Array,
+    required: true,
+  },
+  img: {
+    type: String,
     required: true,
   },
 });
