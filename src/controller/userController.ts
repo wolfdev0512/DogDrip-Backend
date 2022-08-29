@@ -36,10 +36,10 @@ export const invite_user = async (
   img: string,
   inviteId: string
 ) => {
-  const result = await add_user(first, last, email, img);
+  const result: any = await add_user(first, last, email, img);
   const inviteUser = await get_user(inviteId);
-  inviteUser?.invite.push(inviteId);
   if (result) {
+    inviteUser?.invite.push(result?._id);
     await User.findOneAndUpdate(
       { _id: new ObjectId(inviteId) },
       {
