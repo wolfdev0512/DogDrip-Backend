@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  address: {
+    type: String,
+    require: true,
+  },
   invite: {
     type: Array,
     required: true,
@@ -20,6 +24,10 @@ const UserSchema = new mongoose.Schema({
   img: {
     type: String,
     required: true,
+  },
+  level: {
+    type: Number,
+    require: true,
   },
 });
 
