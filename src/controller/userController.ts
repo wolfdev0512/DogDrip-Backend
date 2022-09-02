@@ -110,6 +110,28 @@ export const get_Level = async (id: string) => {
   return j;
 };
 
+export const get_mintedUser = async (id: string) => {
+  const web3 = createAlchemyWeb3(process.env.ALCHEMY_HTTP || "");
+  const contract = new web3.eth.Contract(
+    contract_abi as AbiItem[],
+    contract_address
+  );
+  const user = await get_user(id);
+  const invite_number = user?.invite.length || 0;
+
+  let count = 0;
+  for (let i = 0; i < invite_number; i++) {
+    const invitedUser = await get_user(user?.invite[i]);
+    const balance = await contract.methods
+      .balanceOf(invitedUser?.address)
+      .call();
+    if (balance > 0) {
+      count++;
+    }
+  }
+  return count;
+};
+
 export const claim = async (id: string) => {
   const user = await get_user(id);
   const address = user?.address || "";
